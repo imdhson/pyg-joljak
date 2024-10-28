@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trash Locations Map</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        .content {
+            display: flex;
+            width: 100%;
+            height: calc(100% - 60px);
+        }
+
+        .locations-container {
+            width: 30%;
+            padding-right: 20px;
+            overflow-y: auto;
+        }
+
+        .map-container {
+            width: 70%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-left: 20px;
+        }
+
+        .trash-location {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .trash-location img {
+            max-width: 80px;
+            height: auto;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        .trash-location h2 {
+            font-size: 18px;
+            color: #34495e;
+            margin: 0;
+            flex-grow: 1;
+            transition: text-shadow 0.3s ease;
+        }
+
+        .highlighted {
+            text-shadow: 2px 2px 5px orange;
+        }
+
+        .trash-location .index {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-right: 10px;
+        }
+
+        .update-button {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 20px; /* margin-right 설정 */
+            width: 100px; /* 버튼의 width를 넓게 설정 */
+            text-align: center;
+        }
+
+        .update-button:hover {
+            background-color: #2980b9;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            .locations-container {
+                width: 100%;
+                padding-right: 0;
+                padding-bottom: 20px;
+            }
+            .map-container {
+                width: 100%;
+                height: 400px;
+                margin-left: 0;
+            }
+        }
+    </style>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=o6r34t2t7z"></script>
+</head>
+<body>
+    <h1>청소 대시보드</h1>
+
+    <div class="container">
+        <div class="content">
+            <div class="locations-container" id="locations-container">
+                <!-- JavaScript로 데이터가 여기 채워질 예정 -->
+            </div>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mapRef = null;
+
+        const currentMyLocation = { lat: 37.537797, lng: 126.944338 };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (currentMyLocation.lat !== 0 && currentMyLocation.lng !== 0) {
+                mapRef = new naver.maps.Map("map", {
+                    center: new naver.maps.LatLng(currentMyLocation.lat, currentMyLocation.lng),
+                    zoom: 17,
+                    minZoom: 10,
+                    zoomControl: true,
+                    mapTypeControl: true,
+                    zoomControlOptions: {
+                        position: naver.maps.Position.TOP_RIGHT,
+                    },
+                    mapDataControl: false,
+                });
+            }
+
+            fetch('/d')
+                .then(response => response.json())
+                .then(data => {
+                    let locations = [];
+                    
+                    data.forEach((point, index) => {
+                        point.updateIndex = index;
+                        locations.push({...point, label: locations.length + 1});
+                    });
+
+                    const container = document.getElementById('locations-container');
+                    locations.forEach((point, index) => {
+                        const locationDiv = document.createElement('div');
+                        locationDiv.className = 'trash-location';
+
+                        const nameClass = point.isPreSet === false ? 'highlighted' : '';
+
+                        locationDiv.innerHTML = `
+                            <div class="index">${index + 1}</div>
+                            <h2 class="${nameClass}">${point.name}</h2>
+                            <a href="/update/${point.updateIndex}" class="update-button">Update</a>
+                        `;
+                        container.appendChild(locationDiv);
+
+                        const marker = new naver.maps.Marker({
+                            position: new naver.maps.LatLng(point.latitude, point.longitude),
+                            map: mapRef,
+                            title: point.name
+                        });
+
+                        locationDiv.addEventListener('click', () => {
+                            mapRef.setCenter(marker.getPosition());
+                            mapRef.setZoom(18);
+                        });
+                    });
+                })
+                .catch(error => console.error('Error fetching location points:', error));
+        });
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trash Locations Map</title>
+    <title>고양이 지도</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -88,7 +88,7 @@
             margin-right: 10px;
         }
 
-        .update-button {
+        .update-button, .home-button {
             background-color: #3498db;
             color: white;
             padding: 5px 20px;
@@ -100,8 +100,16 @@
             text-align: center;
         }
 
-        .update-button:hover {
+        .update-button:hover, .home-button:hover {
             background-color: #2980b9;
+        }
+
+        .home-button {
+            background-color: #2ecc71;
+        }
+
+        .home-button:hover {
+            background-color: #27ae60;
         }
 
         #map {
@@ -124,11 +132,28 @@
                 margin-left: 0;
             }
         }
+
+        /* 새로 추가된 버튼 스타일 */
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .navigation-buttons a {
+            margin: 0 10px;
+        }
     </style>
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=o6r34t2t7z"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=yonzfais5x"></script>
 </head>
 <body>
-    <h1>청소 대시보드</h1>
+    <h1>고양이 출몰 지도</h1>
+
+    <!-- 메인으로 이동하는 버튼 추가 -->
+    <div class="navigation-buttons">
+        <a href="/" class="home-button">고양이 제보하기</a>
+        <a href="/workflow" class="update-button">고양이 지도 보기</a>
+    </div>
 
     <div class="container">
         <div class="content">

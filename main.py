@@ -32,6 +32,7 @@ class LocPoint:
 
 prc_future = None
 prc_start_time = None
+global current_point_index
 current_point_index = None
 
 loc_points = [
@@ -77,7 +78,6 @@ def upload():
         nearest_index = find_nearest_index(loc_points, new_point)
         loc_points.insert(nearest_index, new_point)
         current_point_index = nearest_index
-
         prc_future = executor.submit(imgProcess.prc, img_path)
         prc_start_time = time.time()
 
@@ -129,9 +129,9 @@ def landingWorker():
 @app.route('/check_status', methods=['GET'])
 def check_status():
     global prc_future, prc_start_time, current_point_index
+    print(loc_points[current_point_index].workDone, loc_points[current_point_index].name, loc_points[current_point_index].result)
     if prc_future is None:
         return '처리 중'
-
     elapsed_time = time.time() - prc_start_time
 
     try:
@@ -141,15 +141,15 @@ def check_status():
 
         if isinstance(result, str) and result.startswith('Fail,'):
             loc_points[current_point_index].workDone = True
-            a, b = result.split(',')[1], ""
+            # a, b = result.split(',')[1], ""
             if not loc_points[current_point_index].isPreSet:
                 loc_points.pop(current_point_index)
-            return f'NotDetect,{a},{b}'
+            return f'NotDetect, {result}'
 
         elif isinstance(result, str) and result.startswith('Success,'):
             loc_points[current_point_index].workDone = False
-            a, b = result.split(',')[1], result.split(',')[2]
-            return f'Detect,{a},{b}'
+            # a, b = result.split(',')[1], result.split(',')[2]
+            return f'Detect,{result}'
     except TimeoutError:
         if elapsed_time < 60:
             return '처리 중'
@@ -158,7 +158,7 @@ def check_status():
     except Exception as e:
         if current_point_index is not None:
             loc_points[current_point_index].result = str(e)
-        return f'오류 발생: {str(e)}'
+        return f'오류 발생: {str(e)}' ## 오류가 발생하는 곳 입니다. 오류 발생: list index out of range
 
 @app.route('/front/<path:filename>')
 def serve_front_static(filename):
@@ -190,4 +190,4 @@ def manager():
 if __name__ == '__main__':
     if not os.path.exists('temp'):
         os.makedirs('temp')
-    app.run(debug=True)
+    app.run(port=9999)

@@ -50,17 +50,15 @@
                     const [_, score, message] = status.split(',');
                     return `<div class='text-success'>
                         <div class='checkmark'>✓</div>
-                        <h2>깨끗합니다. 수고하셨습니다.</h2>
+                        <h2>고양이가 인식되지 않아 장소를 제거합니다.</h2>
                         <p>${message}</p>
-                        <p>신뢰도: ${score}%</p>
                      </div>`;
                 } else if (status.startsWith('Detect')) {
                     const [_, score, message] = status.split(',');
                     return `<div class='text-danger'>
-                        <h2>더러운 환경이 또 한번 감지 되었어요. 다시 시도 해주세요.</h2>
+                        <h2>고양이가 인식되어 마커를 남겨두겠습니다.</h2>
                         <div class='crossmark'>✗</div>
                         <p>${message}</p>
-                        <p>신뢰도: ${score}%</p>
                      </div>`;
                 } else {
                     return `<h2 class="text-danger">알 수 없는 상태: ${status}</h2>`;

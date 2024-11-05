@@ -36,9 +36,9 @@ global current_point_index
 current_point_index = None
 
 loc_points = [
-    LocPoint(37.537797, 126.944338, "한신오피스텔", True),
-    LocPoint(37.539235, 126.945453, "마포역", True),
-    LocPoint(37.537796, 126.945050, "서울경찰청 금융범죄수사대", True)
+    LocPoint(35.9001, 128.8545, "정보통신대학 7호관", True),
+    LocPoint(35.8996,128.8530, "복지관 식당", True),
+    LocPoint(35.9003,128.8505, "경영대", True)
 ]
 
 def find_nearest_index(loc_points, new_point):

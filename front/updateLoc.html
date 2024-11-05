@@ -93,7 +93,7 @@
                 <span>사용자 제보</span>
                 {% endif %}
             </p>
-            <p><strong>작업 완료 여부:</strong>
+            <p><strong>고양이 위치 종결 여부:</strong>
                 {% if point.workDone %}
                 <span style="color: green;">✅</span>
                 {% else %}
@@ -125,7 +125,7 @@
 
     <div class="card mb-4">
         <div class="card-header">
-            <h5 class="mb-0">해당 위치 청소 완료</h5>
+            <h5 class="mb-0">고양이 제보 업데이트하기</h5>
         </div>
         <div class="card-body">
             <form id="reportForm" action="/update/{{ id }}" method="POST" enctype="multipart/form-data">
@@ -134,7 +134,7 @@
                 <input type="hidden" id="longitude" name="longitude">
 
                 <div class="form-group">
-                    <h2>새 이미지 업로드:</h2>
+                    <h2>현장 제보 이미지 업로드:</h2>
                 </div>
 
                 <div class="form-group">
@@ -142,7 +142,7 @@
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary btn-lg">청소를 완료했습니다</button>
+                    <button type="submit" class="btn btn-primary btn-lg">이 위치 업데이트하기</button>
                 </div>
             </form>
         </div>
